@@ -1,0 +1,34 @@
+/* Basic responsive styles for the game canvas and HUD */
+html, body {
+  height: 100%;
+  margin: 0;
+}
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #000;
+}
+#gameContainer {
+  width: 100%;
+  max-width: 1024px;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+canvas {
+  border: 2px solid #fff;
+  width: 100%;
+  height: auto;
+  max-height: 100vh;
+}
+
+/* HUD styles */
+.hud {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: white;
+  font-family: Arial, sans-serif;
+}
