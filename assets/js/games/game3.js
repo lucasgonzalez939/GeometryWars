@@ -113,6 +113,13 @@ const Game3 = {
       if (Engine.keys['r']||Engine.keys['R']){ Engine.clearInput && Engine.clearInput(); Engine.setScene(Game3); }
       return;
     }
+    
+    // Escape key to return to menu
+    if (Engine.keys['Escape'] || Engine.codes['Escape']) {
+      Engine.clearInput && Engine.clearInput();
+      Engine.setScene(GameManager.MenuScene);
+      return;
+    }
 
     // handle dragging via Engine.touch
     if (Engine.touch.isDown) {

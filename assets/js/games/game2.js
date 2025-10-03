@@ -176,6 +176,14 @@ const Game2 = {
   if (Engine.keys['m'] || Engine.keys['M']) { Engine.clearInput && Engine.clearInput(); Engine.setScene(GameManager.MenuScene); }
       return;
     }
+    
+    // Escape key to return to menu
+    if (Engine.keys['Escape'] || Engine.codes['Escape']) {
+      Engine.clearInput && Engine.clearInput();
+      Engine.setScene(GameManager.MenuScene);
+      return;
+    }
+    
     if (Engine.touch.isDown && !this.touchDown) {
       this.touchDown = true;
       const x = Engine.touch.x, y = Engine.touch.y;

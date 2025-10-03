@@ -61,6 +61,14 @@ const Game1 = {
             }
             return;
         }
+        
+        // Escape key to return to menu
+        if (Engine.keys['Escape'] || Engine.codes['Escape']) {
+            Engine.clearInput && Engine.clearInput();
+            Engine.setScene(GameManager.MenuScene);
+            return;
+        }
+        
         // Handle keyboard input
         if (Engine.keys['ArrowLeft'] && this.train.x > 0) {
             this.train.x -= this.train.speed * deltaTime;

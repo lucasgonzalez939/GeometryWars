@@ -6,20 +6,20 @@
     <style>
         body {
             margin: 0;
+            padding: 0;
             background-color: #000;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            overflow: hidden; /* Prevents scrollbars on mobile */
+            overflow: hidden;
         }
         canvas {
             display: block;
-            border: 2px solid #fff;
-            max-width: 100%;
-            max-height: 100%;
-            width: auto;
-            height: auto;
+            border: 3px solid #fff;
+            background-color: #1a1a2e;
+            width: 800px;
+            height: 600px;
         }
     </style>
 </head>
@@ -32,11 +32,42 @@
     <script src="assets/js/shared/ui-hud.js"></script>
     <script src="assets/js/shared/particles.js"></script>
     <script src="assets/js/shared/sound.js"></script>
+    <script src="assets/js/shared/result-screen.js"></script>
+    <script src="assets/js/shared/game-mode-modal.js"></script>
     <script src="assets/js/game-manager.js"></script>
     <script src="assets/js/games/game1.js"></script>
+    <script src="assets/js/games/game2.js"></script>
+    <script src="assets/js/games/game3.js"></script>
+    <script src="assets/js/games/game3-levels.js"></script>
+    <script src="assets/js/games/game4.js"></script>
+    <script src="assets/js/games/game5.js"></script>
+    <script src="assets/js/games/game6.js"></script>
+    <script src="assets/js/games/game7.js"></script>
     <script>
         window.onload = function() {
-            GameManager.init();
+            // Simple test to verify canvas is working
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Fill with dark background
+            ctx.fillStyle = '#1a1a2e';
+            ctx.fillRect(0, 0, 800, 600);
+            
+            // Draw white text
+            ctx.fillStyle = 'white';
+            ctx.font = '24px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Loading...', 400, 300);
+            
+            // Initialize GameManager after a short delay
+            setTimeout(function() {
+                if (typeof GameManager !== 'undefined') {
+                    GameManager.init();
+                } else {
+                    ctx.fillStyle = 'red';
+                    ctx.fillText('Error: GameManager not loaded', 400, 350);
+                }
+            }, 100);
         };
     </script>
 </body>

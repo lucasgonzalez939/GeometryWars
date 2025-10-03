@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Canvas Test</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        canvas {
+            border: 2px solid #fff;
+            background-color: #333;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="testCanvas" width="800" height="600"></canvas>
+    <script>
+        window.onload = function() {
+            console.log('Test page loaded');
+            const canvas = document.getElementById('testCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Draw test pattern
+            ctx.fillStyle = '#1a1a2e';
+            ctx.fillRect(0, 0, 800, 600);
+            
+            ctx.fillStyle = 'white';
+            ctx.font = '32px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Canvas Test Working!', 400, 300);
+            
+            ctx.fillStyle = 'red';
+            ctx.fillRect(100, 100, 100, 100);
+            
+            ctx.fillStyle = 'blue';
+            ctx.fillRect(300, 100, 100, 100);
+            
+            ctx.fillStyle = 'green';
+            ctx.fillRect(500, 100, 100, 100);
+            
+            console.log('Test drawing completed');
+        };
+    </script>
+</body>
+</html>

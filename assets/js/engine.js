@@ -116,13 +116,13 @@ const Engine = {
         }
     },
 
-    setScene: function(newScene) {
+    setScene: function(newScene, params) {
         if (this.currentScene && typeof this.currentScene.onExit === 'function') {
             try { this.currentScene.onExit(); } catch (e) { console.error(e); }
         }
         this.currentScene = newScene;
         if (this.currentScene && typeof this.currentScene.onEnter === 'function') {
-            try { this.currentScene.onEnter(); } catch (e) { console.error(e); }
+            try { this.currentScene.onEnter(params); } catch (e) { console.error(e); }
         }
     },
 

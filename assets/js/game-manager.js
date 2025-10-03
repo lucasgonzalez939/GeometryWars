@@ -7,10 +7,35 @@ const GameManager = {
     { id: 'game3', title: 'Block Builder Challenge', script: 'assets/js/games/game3.js', global: 'Game3' },
     { id: 'game4', title: 'Shooter Sweep', script: 'assets/js/games/game4.js', global: 'Game4' },
         { id: 'game5', title: 'Polygon Platformer', script: 'assets/js/games/game5.js', global: 'Game5' },
-        { id: 'game6', title: 'Galactic Geometry Blaster', script: 'assets/js/games/game6.js', global: 'Game6' }
+        { id: 'game6', title: 'Galactic Geometry Blaster', script: 'assets/js/games/game6.js', global: 'Game6' },
+        { id: 'game7', title: 'Tangram Master', script: 'assets/js/games/game7.js', global: 'Game7' }
     ],
 
     currentGameId: null,
+    currentLevel: 1,
+
+    // Return to main menu from any game
+    returnToMenu: function() {
+        this.currentGameId = null;
+        this.currentLevel = 1;
+        Engine.clearInput && Engine.clearInput();
+        Engine.setScene(this.MenuScene);
+    },
+
+    // Start next level for current game
+    startNextLevel: function() {
+        if (this.currentGameId) {
+            this.currentLevel++;
+            this.startGame(this.currentGameId, { level: this.currentLevel });
+        }
+    },
+
+    // Restart current level
+    restartLevel: function() {
+        if (this.currentGameId) {
+            this.startGame(this.currentGameId, { level: this.currentLevel });
+        }
+    },
 
     // Main menu scene
     MenuScene: {
@@ -34,6 +59,12 @@ const GameManager = {
         },
 
         update: function(dt) {
+            // Update game mode modal first
+            if (GameModeModal.isVisible) {
+                GameModeModal.update(dt);
+                return; // Don't process menu input while modal is open
+            }
+
             // navigate menu with ArrowUp / ArrowDown using timing to avoid immediate wrap
             const now = performance.now();
             const nav = this._navState;
@@ -110,6 +141,11 @@ const GameManager = {
         render: function(ctx) {
             // Card-style menu
             ctx.clearRect(0, 0, Engine.canvas.width, Engine.canvas.height);
+            
+            // Set dark background
+            ctx.fillStyle = '#1a1a2e';
+            ctx.fillRect(0, 0, Engine.canvas.width, Engine.canvas.height);
+            
             ctx.fillStyle = 'white';
             ctx.textAlign = 'left';
             ctx.font = '28px Arial';
@@ -165,6 +201,9 @@ const GameManager = {
 
             // small hint
             ctx.textAlign = 'center'; ctx.fillStyle = 'white'; ctx.font = '14px Arial'; ctx.fillText('Use Arrow keys or Tap cards to start', Engine.canvas.width / 2, Engine.canvas.height - 28);
+            
+            // Render game mode modal on top if visible
+            GameModeModal.render(ctx);
         },
 
         // helper: draw wrapped title with maxLines and ellipsis
@@ -238,10 +277,28 @@ const GameManager = {
         });
     },
 
-    startGame: async function(gameId) {
+    startGame: async function(gameId, params) {
         const game = this.games.find(g => g.id === gameId);
         if (!game) return console.error('Unknown gameId', gameId);
         this.currentGameId = gameId;
+        
+        // Set level tracking
+        if (params && params.level) {
+            this.currentLevel = params.level;
+        } else {
+            this.currentLevel = 1;
+        }
+
+        // Check if this game supports multiple modes
+        const gamesWithModes = ['game1', 'game4', 'game6'];
+        if (gamesWithModes.includes(gameId) && !params?.mode) {
+            // Show mode selection modal
+            GameModeModal.show((selectedMode) => {
+                // Start the game with selected mode
+                this.startGame(gameId, { ...params, mode: selectedMode });
+            });
+            return;
+        }
 
         try {
             await this._loadScriptIfNeeded(game);
@@ -252,10 +309,14 @@ const GameManager = {
                 window.Game1.targetShape = types[Math.floor(Math.random() * types.length)];
             }
 
-            // Switch scene
+            // Switch scene with level parameter
             const scene = window[game.global];
             if (scene) {
-                Engine.setScene(scene);
+                const gameParams = { 
+                    level: this.currentLevel,
+                    ...(params || {})
+                };
+                Engine.setScene(scene, gameParams);
             } else {
                 console.error('Scene not found after loading', game.global);
             }
